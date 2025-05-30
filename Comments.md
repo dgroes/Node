@@ -1,3 +1,5 @@
+Repo: https://github.com/dgroes/Node
+
 ### Qué es Node.JS
 `Node.JS` es un entorno de ejecución para JavaScript que permite ejecutar código JS fuera del navegador, es decir, en el **servidor**
 - Está construido sobre el **motor V8** de Google Chrome (el mismo que usa el navegador para ejecutar JS)
@@ -173,6 +175,119 @@ Esto le dice al motor de Node.js:
 | `require('fs')`      | ✅ Sí       | ⚠️ Común pero menos explícito      |
 | `require('node:fs')` | ✅ Sí       | ✅ Recomendado en entornos modernos |
 
+
+### C06: Asíncronía y Callbacks
+*Operación asincrónica → No bloquea el hilo principal de ejecución*
+
+*Callback → Es una función que se pasa como argumento y que se ejecuta más tarde, cuando termine la tarea asincrónica.*
+
+Este fichero lee 2 ficheros de texto de forma asincróna, mientras eso ocurre, siguie ejecutando otras instrucciones.
+
+1. Importacición del Módulo File System (`fs`)
+`const fs = require('node:fs')`
+Esto carga el módulo `fs` para que se pueda acceder a funciones para trabajar con el sistema de archivos, como `readFile`.
+
+2. LLamando a `fs.readFile()` (asincrónico)
+```js
+fs.readFile('./archivo.txt', 'utf-8', (err, data) => {
+    if (err) {
+        console.error('Error al leer el archivo:', err);
+        return;
+    }
+    console.log(data);
+});
+```
+Aquí ocurre lo siguiente:
+- Node No espera a que terminte esta tarea.
+- El archivo `archivo.txt` se empieza a leer en **segundo plano**
+- Cuando se termine de leer, Node ejecturará la **función callback** que imprimirá el contenido.
+Lo que ocurre con la segunda función callback es lo mismo que la primera.
+
+`fs.readFile` es Asincrónica. Las tareas pesadas como leer un archivo no bloquerán el flujo del probrama haciendo que el orden de ejución en la consola será mas o menos así:
+```txt
+Leyendo el primer archivo...
+
+Haciendo algo más mientras se lee el primer archivo...
+
+Leyendo el segundo archivo...
+(Contenido de archivo.txt)
+(Contenido de archivo02.txt)
+```
+| Estilo              | ¿Bloquea el flujo? | ¿Paralelo o secuencial?                                             | Sintaxis clara |
+| ------------------- | ------------------ | ------------------------------------------------------------------- | -------------- |
+| **Callback**        | No                 | Paralelo (por defecto)                                              | Menos legible  |
+| **Promesas (then)** | No                 | Paralelo (con `Promise.all`)                                        | Más clara      |
+| **Async/Await**     | No                 | Secuencial (por defecto, pero puede ser paralelo con `Promise.all`) | Muy clara ✅    |
+
+
+### C07: Asincronía y Promesas
+`const fs = require('node:fs/promises')`
+En esta línea se está importando la **versión basada en Promesas** del módulo `fs` de Node.js. Esto permite que la funciones como `fs.readFile()` devuelvan una **promeas** en lugar de requerir un callback.
+
+```js
+fs.readFile('./archivo.txt', 'utf-8')
+  .then(text => {
+    console.log(text);
+  });
+```
+- fs.readFile() inicia una operación asincrónica.
+- En lugar de pasar un callback, el método devuelve una promesa.
+- Cuando la promesa se resuelve con éxito, el contenido del archivo se recibe como text.
+- Si hubiera un error, se puede capturarlo con .catch().
+
+
+### C08: Callbacks o Promesas
+*Comentaro no vinculado a un fichero del repositorio*
+
+| Característica            | Callbacks                | Promesas                  |
+| ------------------------- | ------------------------ | ------------------------- |
+| Sintaxis                  | Más antigua, más anidada | Más limpia, encadenable   |
+| Manejo de errores         | Dentro del callback      | `.catch()` separado       |
+| Mantenimiento             | Difícil con muchos pasos | Más fácil de leer/escalar |
+| Soporte con `async/await` | ❌ No aplica directamente | ✅ Sí                      |
+
+### C09 Asincronía Secuencial
+El uso de `await`, hace que pause la ejecución sólo dentro de la función `async`, sin bloquear el hilo principal de Node.js.
+- El programa espera a que se termine de lerr cada archivo **antes de continuar** al siguiente paso
+- Pero **no bloquea todo Node.js**, sólo esa función `async`.
+
+Por qué es secuencial:
+```js
+const text = await readFile('./archivo.txt', 'utf-8')
+// se espera que termine antes de continuar
+
+const secondText = await readFile('./archivo02.txt', 'utf-8')
+// se espera después de la primera
+```
+Cada archivo se lee uno tras otro, aunque sea de forma asincrónica.
+Esto es útil cuando se necesita que el orden de lectura se respete o que una tarea dependa de la anterior.
+
+| Estilo              | ¿Bloquea el flujo? | ¿Paralelo o secuencial?                                             | Sintaxis clara |
+| ------------------- | ------------------ | ------------------------------------------------------------------- | -------------- |
+| **Callback**        | No                 | Paralelo (por defecto)                                              | Menos legible  |
+| **Promesas (then)** | No                 | Paralelo (con `Promise.all`)                                        | Más clara      |
+| **Async/Await**     | No                 | Secuencial (por defecto, pero puede ser paralelo con `Promise.all`) | Muy clara ✅    |
+
+
+### C10: Asincronía con Promesas y Async/Await en Paralelo
+```js
+Promise.all([
+  readFile('./archivo.txt', 'utf-8'),
+  readFile('./archivo2.txt', 'utf-8')
+])
+```
+- Aquí se lanza ambas lecturas de archivos al mismo tiempo.
+- Node.js empieza a leer los dos archivos en paralelo.
+- Luego, cuando ambas operaciones terminan, .then() se ejecuta con los resultados en orden.
+
+| Estilo              | ¿Bloquea el flujo? | ¿Paralelo o secuencial?                                             | Sintaxis clara |
+| ------------------- | ------------------ | ------------------------------------------------------------------- | -------------- |
+| **Callback**        | No                 | Paralelo (por defecto)                                              | Menos legible  |
+| **Promesas (then)** | No                 | Paralelo (con `Promise.all`)                                        | Más clara      |
+| **Async/Await**     | No                 | Secuencial (por defecto, pero puede ser paralelo con `Promise.all`) | Muy clara ✅    |
+
+
+###
 
 ###
 

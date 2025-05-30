@@ -1,3 +1,4 @@
+/* C06: Asíncronía y Callbacks */
 const fs = require('node:fs');
 
 console.log('Leyendo el primer archivo...')
@@ -9,8 +10,9 @@ fs.readFile('./archivo.txt', 'utf-8', (err, data) => {
     console.log(data);
 }
 );
+console.log(' ')
 console.log('Haciendo algo más mientras se lee el primer archivo...');
-
+console.log(' ')
 console.log('Leyendo el segundo archivo...')
 fs.readFile('./archivo02.txt', 'utf-8', (err, text02) => {
     if (err) {
