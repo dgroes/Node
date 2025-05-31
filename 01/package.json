@@ -1,0 +1,31 @@
+{
+  "dependencies": {
+    "picocolors": "1.1.1"
+  },
+  "name": "curso-node",
+  "version": "1.0.0",
+  "description": "Curso de Node de @midudev",
+  "main": "index.js",
+  "eslintConfig": {
+    "extends": "standard"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/dgroes/Node.git"
+  },
+  "keywords": [
+    "curso",
+    "node",
+    "nodejs",
+    "NodeJS"
+  ],
+  "author": "Diego Pastén",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/dgroes/Node/issues"
+  },
+  "homepage": "https://github.com/dgroes/Node#readme"
+}
