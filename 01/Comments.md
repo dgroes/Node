@@ -389,11 +389,56 @@ NPM (Node Package Manager) es el gestor de paquetes predeterminado para Node.js.
 - 📝 Definir proyectos mediante el archivo package.json.
 - 🚀 Ejecutar scripts y tareas automatizadas.
 
+### C15 Servidor de Node
+Un servidor HTTP es una apliación que escucha peticiones y responde a esas peticiones. Un ervidro HTTP hace:
+- Escuchar conexiones por el protocolo HTTP.
+- Recibir solicitudes del navegador (GET, POST, etc.).
+- Procesar esas solicitudes.
+- Responder con contenido (HTML, texto, JSON, etc.).
+
+Para importar el módulo `http`:<br>
+`const http = require('node:http')`
+
+Con `createServer()` se puede crear un servidor
+El callback `(req, res)` se ejecuta cada vez que alguien hace una petición al servidor (por ejemplo, visitando `http://localhost:PUERTO`).
+- `req` = objeto que representa la petición del cliente
+- `res` = objeto que representa la respuesta del servidor
+
+Entonces en el ejemplo del fichero:
+```js
+const server = http.createServer((req, res) => {
+    console.log("Request received...")
+    res.end("Hola Mundo")
+})
+```
+Lo que le llegará al usuario será el `res`, "Hola Mundo"
+
+Será importante asignarle un puerto para el levantamiento del servidor
+```js
+server.listen(0, () => {
+    console.log(`Server listening on port http://localhost:${server.address().port}`)
+})
+```
+En este ejemplo al utilizar `0`, Node buscará automaticamente un puerto que esté disponible. Esto no cería recomentable en producción.
 
 
-###
+### C16: Net = Sockets de red a bajo nivel
+El módulo `net` de Node.js se utiliza para trabajar con **sockets de red a bajo nivel**, es decir, conexiones TCP o IPC (Inter-Process Communication).
+Mientras que el módulo `http` se usa específicamente para manejar el **protocolo HTTP**, el módulo `net` permite crear **servidores y clientes TCP genéricos**, lo cual te da mucho más control y flexibilidad.
 
-###
+Diferencias clave entre net y http:
+| `http`                    | `net`                                                    |
+| ------------------------- | -------------------------------------------------------- |
+| Usa protocolo HTTP        | Usa protocolo TCP                                        |
+| Ideal para servidores web | Ideal para protocolos personalizados o sistemas internos |
+| Capa más alta             | Capa más baja (más control)                              |
+
+
+#### 📦 ¿Qué hacer con net?
+- Crear un servidor TCP personalizado.
+- Crear un cliente TCP que se conecte a otro servidor.
+- Comunicar procesos entre sí.
+- Usar protocolos que no son HTTP (como SMTP, FTP, etc.).
 
 ###
 
