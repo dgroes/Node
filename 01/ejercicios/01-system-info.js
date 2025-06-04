@@ -7,13 +7,27 @@ Crea un script llamado system-info.js que imprima la siguiente información:
 - Tiempo que lleva encendido el sistema (en horas y minutos)
 */
 
-const os = require('node:os')
-console.log(os.type())
-console.log(os.arch())
-// console.log(os.cpus())
+// const { console } = require('node:inspector');
+const os = require("node:os");
 
-cpu = os.cpus();
-const count = Object.keys(cpu).length;
-console.log(count)
+function secondToHours(segundos) {
+  const horas = Math.round(segundos / 3600);
+  const minutos = Math.round((segundos % 3600) / 60);
+  const segs = Math.round(segundos % 60);
 
-console.log(Math.round(os.uptime() / 60) + " Minutos")
+  return (`${horas}:${minutos}:${segs}`);
+}
+
+function systemInfo() {
+  console.log("Nombre del OS:", os.type());
+  console.log("Architectura del OS:", os.arch());
+
+  cpu = os.cpus();
+  const count = Object.keys(cpu).length;
+  console.log("Número de nucleos: ", count);
+
+  const segundos = os.uptime();
+  console.log("Tiempo activo:", secondToHours(segundos));
+}
+
+systemInfo(os);
