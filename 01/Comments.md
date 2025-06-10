@@ -288,7 +288,7 @@ Promise.all([
 
 
 ### C11: Rutas y directorios
-El módulo `path` de Node.js es esencial para majera rutas de archivos y directorios de manera segura y multiplataforma (Windows, Linux y macOS).
+El módulo `path` de Node.js es esencial para manejar rutas de archivos y directorios de manera segura y multiplataforma (Windows, Linux y macOS).
 
 Para seguir una buenas practicas y evitar errores es importante **usar siempre** `path.join()` o ``path.resolve()` en lugar de concatenar strings.
 
